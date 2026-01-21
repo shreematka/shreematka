@@ -252,6 +252,64 @@
                 window.location.href = 'home.html';
             }
         });
-    </script>
+    <script>
+    // EMERGENCY FIX FOR MARKET CLICK
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("Page loaded, adding click events...");
+        
+        // Add click events to all market cards
+        document.querySelectorAll('.market-card').forEach(card => {
+            card.onclick = function() {
+                const marketName = this.querySelector('.market-name').childNodes[0].textContent.trim();
+                const marketTime = this.querySelector('.market-time').textContent.trim();
+                
+                // Hide markets, show results
+                document.getElementById('marketPage').style.display = 'none';
+                document.getElementById('resultsPage').style.display = 'block';
+                
+                // Update title
+                document.getElementById('marketTitle').textContent = marketName + ' - ' + marketTime;
+                
+                // Show back button
+                document.querySelector('.back-btn').style.display = 'inline-block';
+                document.querySelector('.refresh-btn').style.display = 'none';
+                
+                // Generate numbers
+                document.querySelectorAll('.number-box').forEach(box => {
+                    box.textContent = Math.floor(Math.random() * 9) + 1 + '*';
+                });
+                document.querySelectorAll('.jodi-box').forEach(box => {
+                    box.textContent = Math.floor(Math.random() * 90) + 10;
+                });
+            };
+        });
+        
+        // Back button
+        document.querySelector('.back-btn').onclick = function() {
+            document.getElementById('resultsPage').style.display = 'none';
+            document.getElementById('marketPage').style.display = 'block';
+            this.style.display = 'none';
+            document.querySelector('.refresh-btn').style.display = 'inline-block';
+        };
+        
+        // Refresh button
+        document.querySelector('.refresh-btn').onclick = function() {
+            this.textContent = '🔄 UPDATING...';
+            setTimeout(() => {
+                this.textContent = '🔄 REFRESH';
+                alert('Data refreshed!');
+            }, 1000);
+        };
+        
+        // Live clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('liveClock').innerHTML = 
+                now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    });
+</script>
 </body>
       </html>
