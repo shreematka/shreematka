@@ -562,84 +562,123 @@
             document.querySelector('.back-btn').style.display = 'none';
         }
         
-        // ========== GENERATE RANDOM NUMBERS ==========
-        function generateRandomNumbers() {
-            // Generate random open numbers (1-9)
-            const openNumbers = document.querySelectorAll('.number-box');
-            openNumbers.forEach(box => {
-                const randomNum = Math.floor(Math.random() * 9) + 1;
-                box.textContent = `${randomNum}*`;
-            });
-            
-            // Generate random jodi numbers (10-99)
-            const jodiNumbers = document.querySelectorAll('.jodi-box');
-            jodiNumbers.forEach(box => {
-                const randomNum = Math.floor(Math.random() * 90) + 10;
-                box.textContent = randomNum;
-            });
+        <script>
+    // ========== CUSTOM MARKET NUMBERS ==========
+    const marketNumbers = {
+        'SRIDEVI': {
+            open: [1, 2, 3, 4],
+            jodi: [15, 25, 38, 46]
+        },
+        'MILAN DAY': {
+            open: [5, 6, 7, 8],
+            jodi: [12, 23, 34, 45]
+        },
+        'KALYAN': {
+            open: [2, 4, 6, 8],
+            jodi: [11, 22, 33, 44]
+        },
+        'SRIDEVI NIGHT': {
+            open: [3, 6, 9, 1],
+            jodi: [16, 27, 38, 49]
+        },
+        'MILAN NIGHT': {
+            open: [4, 8, 2, 6],
+            jodi: [10, 20, 30, 40]
+        },
+        'MAIN BAZAR': {
+            open: [9, 7, 5, 3],
+            jodi: [14, 25, 36, 47]
         }
+    };
+
+    // ========== SHOW MARKET RESULTS ==========
+    function showResults(marketName, marketTime) {
+        console.log(`Opening ${marketName} at ${marketTime}`);
         
-        // ========== REFRESH DATA ==========
-        function refreshData() {
-            // Show loading animation
-            const refreshBtn = document.querySelector('.refresh-btn');
-            const originalText = refreshBtn.textContent;
-            refreshBtn.textContent = '🔄 UPDATING...';
-            refreshBtn.disabled = true;
-            
-            // Update clock
-            updateLiveClock();
-            
-            // Generate new random numbers
-            generateRandomNumbers();
-            
-            // Reset button after 1 second
-            setTimeout(() => {
-                refreshBtn.textContent = originalText;
-                refreshBtn.disabled = false;
-                
-                // Show success message
-                alert('✅ Data refreshed successfully!');
-            }, 1000);
-        }
+        // Hide market selection page
+        document.getElementById('marketPage').style.display = 'none';
         
-        // ========== LOGOUT ==========
-        async function logout() {
-            try {
-                await signOut(auth);
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error('Logout error:', error);
-                alert('Logout failed. Please try again.');
-            }
-        }
+        // Show results page
+        document.getElementById('resultsPage').style.display = 'block';
         
-        // ========== CHECK AUTH & INITIALIZE ==========
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is logged in
-            onAuthStateChanged(auth, (user) => {
-                if (!user) {
-                    // Not logged in, redirect to login
-                    window.location.href = 'index.html';
-                } else {
-                    console.log('User logged in:', user.email);
-                    
-                    // Initialize page
-                    updateLiveClock();
-                    generateRandomNumbers();
-                    
-                    // Make all market cards clickable
-                    document.querySelectorAll('.market-card').forEach(card => {
-                        card.style.cursor = 'pointer';
-                        card.addEventListener('click', function() {
-                            const marketName = this.querySelector('.market-name').childNodes[0].textContent.trim();
-                            const marketTime = this.querySelector('.market-time').textContent.trim();
-                            showResults(marketName, marketTime);
-                        });
-                    });
-                }
-            });
+        // Update market title
+        document.getElementById('marketTitle').textContent = `${marketName} - ${marketTime}`;
+        
+        // Show back button, hide refresh button
+        document.querySelector('.back-btn').style.display = 'inline-block';
+        document.querySelector('.refresh-btn').style.display = 'none';
+        
+        // Show specific numbers for this market
+        showMarketNumbers(marketName);
+    }
+
+    // ========== SHOW SPECIFIC MARKET NUMBERS ==========
+    function showMarketNumbers(marketName) {
+        const numbers = marketNumbers[marketName] || marketNumbers['SRIDEVI'];
+        
+        // Update Open Numbers
+        const openBoxes = document.querySelectorAll('.number-box');
+        openBoxes.forEach((box, index) => {
+            box.textContent = `${numbers.open[index]}*`;
         });
-    </script>
-</body>
-</html>
+        
+        // Update Jodi Numbers
+        const jodiBoxes = document.querySelectorAll('.jodi-box');
+        jodiBoxes.forEach((box, index) => {
+            box.textContent = numbers.jodi[index];
+        });
+    }
+
+    // ========== CHANGE NUMBERS MANUALLY ==========
+    function changeAllNumbers() {
+        // Example: Change all markets to your numbers
+        marketNumbers['SRIDEVI'] = { open: [1, 2, 3, 4], jodi: [15, 25, 38, 46] };
+        marketNumbers['MILAN DAY'] = { open: [5, 6, 7, 8], jodi: [12, 23, 34, 45] };
+        marketNumbers['KALYAN'] = { open: [2, 4, 6, 8], jodi: [11, 22, 33, 44] };
+        // Add more as needed
+    }
+
+    // ========== ADMIN PANEL (ADD THIS TO YOUR PAGE) ==========
+    function addAdminPanel() {
+        const adminHTML = `
+            <div style="text-align: center; margin: 20px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 10px;">
+                <h3 style="color: #ffd700;">ADMIN: Change Numbers</h3>
+                <div style="margin: 10px;">
+                    <select id="marketSelect" style="padding: 8px; margin: 5px;">
+                        <option value="SRIDEVI">SRIDEVI</option>
+                        <option value="MILAN DAY">MILAN DAY</option>
+                        <option value="KALYAN">KALYAN</option>
+                        <option value="SRIDEVI NIGHT">SRIDEVI NIGHT</option>
+                        <option value="MILAN NIGHT">MILAN NIGHT</option>
+                        <option value="MAIN BAZAR">MAIN BAZAR</option>
+                    </select>
+                    <input type="text" id="openInput" placeholder="Open: 1,2,3,4" style="padding: 8px; margin: 5px; width: 150px;">
+                    <input type="text" id="jodiInput" placeholder="Jodi: 15,25,38,46" style="padding: 8px; margin: 5px; width: 150px;">
+                    <button onclick="updateNumbers()" style="padding: 8px 15px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Update
+                    </button>
+                </div>
+            </div>
+        `;
+        document.querySelector('.market-container').insertAdjacentHTML('beforebegin', adminHTML);
+    }
+
+    function updateNumbers() {
+        const market = document.getElementById('marketSelect').value;
+        const openStr = document.getElementById('openInput').value;
+        const jodiStr = document.getElementById('jodiInput').value;
+        
+        const openNumbers = openStr.split(',').map(num => parseInt(num.trim()));
+        const jodiNumbers = jodiStr.split(',').map(num => parseInt(num.trim()));
+        
+        marketNumbers[market] = {
+            open: openNumbers,
+            jodi: jodiNumbers
+        };
+        
+        alert(`${market} numbers updated!`);
+    }
+
+    // Call this after page loads (add to DOMContentLoaded event)
+    // addAdminPanel();
+</script>
