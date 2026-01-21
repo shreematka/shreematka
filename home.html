@@ -8,7 +8,7 @@
     <!-- Firebase 12.8.0 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
         
         // Your Firebase Config
         const firebaseConfig = {
@@ -28,8 +28,9 @@
         // Make auth available globally
         window.auth = auth;
         window.signOut = signOut;
+        window.onAuthStateChanged = onAuthStateChanged;
     </script>
-  <style>
+    <style>
     * {
         margin: 0;
         padding: 0;
@@ -45,20 +46,24 @@
     
     /* Header Styles */
     .header {
-        background: rgba(30, 41, 59, 0.9);
+        background: rgba(30, 41, 59, 0.95);
         padding: 15px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         border-bottom: 3px solid #ffd700;
         position: sticky;
         top: 0;
         z-index: 100;
     }
     
+    .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
     .header h1 {
         color: #ffd700;
-        font-size: 22px;
+        font-size: 24px;
         text-shadow: 0 2px 5px rgba(255, 215, 0, 0.3);
     }
     
@@ -107,37 +112,24 @@
         background: #2563eb;
     }
     
-    /* Live Clock */
-    .live-clock {
-        background: rgba(255, 255, 255, 0.05);
-        padding: 15px;
+    /* Live Clock Container */
+    .live-clock-container {
         text-align: center;
-        margin: 10px 20px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.05);
         border-radius: 10px;
         border: 1px solid rgba(255, 215, 0, 0.3);
-    }
-    
-    .live-clock h2 {
-        color: #ffd700;
-        font-size: 20px;
-        margin-bottom: 5px;
-    }
-    
-    .time-date {
-        font-size: 24px;
-        font-weight: bold;
-        color: #fff;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     }
     
     .live-badge {
         display: inline-block;
         background: #ef4444;
         color: white;
-        padding: 3px 10px;
+        padding: 4px 12px;
         border-radius: 15px;
         font-size: 12px;
-        margin-left: 10px;
+        font-weight: bold;
+        margin-bottom: 10px;
         animation: pulse 2s infinite;
     }
     
@@ -147,19 +139,32 @@
         100% { opacity: 1; }
     }
     
+    .live-clock {
+        font-size: 28px;
+        font-weight: bold;
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        margin-bottom: 5px;
+    }
+    
+    .live-date {
+        font-size: 18px;
+        color: #ccc;
+    }
+    
     /* Welcome Section */
     .welcome-section {
         text-align: center;
-        padding: 20px;
-        margin: 0 20px;
+        padding: 25px 20px 15px;
     }
     
     .welcome-section h2 {
         color: #ffd700;
-        font-size: 28px;
+        font-size: 32px;
         margin-bottom: 10px;
         text-transform: uppercase;
         letter-spacing: 1px;
+        text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
     }
     
     /* Market Grid */
@@ -176,7 +181,7 @@
     
     .market-card {
         background: rgba(255, 255, 255, 0.08);
-        padding: 20px;
+        padding: 25px 20px;
         border-radius: 12px;
         border: 2px solid rgba(255, 215, 0, 0.2);
         transition: all 0.3s;
@@ -189,6 +194,7 @@
         transform: translateY(-5px);
         border-color: #ffd700;
         box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
+        background: rgba(255, 255, 255, 0.12);
     }
     
     .market-card::before {
@@ -203,45 +209,23 @@
     
     .market-name {
         color: #ffd700;
-        font-size: 20px;
+        font-size: 22px;
         margin-bottom: 10px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        font-weight: bold;
     }
     
     .market-time {
-        background: rgba(255, 215, 0, 0.1);
-        padding: 4px 10px;
-        border-radius: 15px;
-        font-size: 14px;
+        background: rgba(255, 215, 0, 0.15);
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 16px;
         color: #fff;
+        font-weight: 600;
     }
-    
-    .market-status {
-        display: inline-block;
-        padding: 3px 10px;
-        border-radius: 12px;
-        font-size: 12px;
-        font-weight: bold;
-        margin-top: 10px;
-    }
-    
-    .status-open {
-        background: #10b981;
-        color: white;
-    }
-    
-    .status-closed {
-        background: #6b7280;
-        color: white;
-    }
-    
-    .status-upcoming {
-        background: #f59e0b;
-        color: white;
-    }
-            /* Results Page (Hidden by default) */
+                /* Results Page (Hidden by default) */
         .results-page {
             display: none;
             padding: 20px;
@@ -286,10 +270,10 @@
         .number-box {
             background: rgba(255, 215, 0, 0.1);
             border: 2px solid rgba(255, 215, 0, 0.3);
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
             text-align: center;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: #fff;
             transition: all 0.3s;
@@ -314,11 +298,12 @@
         .jodi-box {
             background: rgba(59, 130, 246, 0.1);
             border: 2px solid rgba(59, 130, 246, 0.3);
-            padding: 15px 25px;
+            padding: 20px 30px;
             border-radius: 10px;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: #fff;
+            min-width: 80px;
         }
         
         /* Footer */
@@ -333,14 +318,14 @@
         
         /* Mobile Responsive */
         @media (max-width: 768px) {
-            .header {
+            .header-top {
                 flex-direction: column;
-                gap: 10px;
-                padding: 15px;
+                gap: 15px;
+                text-align: center;
             }
             
             .header h1 {
-                font-size: 20px;
+                font-size: 22px;
             }
             
             .header-buttons {
@@ -353,8 +338,12 @@
                 font-size: 13px;
             }
             
-            .time-date {
-                font-size: 20px;
+            .live-clock {
+                font-size: 24px;
+            }
+            
+            .live-date {
+                font-size: 16px;
             }
             
             .market-grid {
@@ -362,11 +351,20 @@
             }
             
             .market-name {
-                font-size: 18px;
+                font-size: 20px;
             }
             
             .numbers-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .number-box, .jodi-box {
+                font-size: 24px;
+                padding: 15px;
+            }
+            
+            .welcome-section h2 {
+                font-size: 26px;
             }
         }
         
@@ -376,30 +374,41 @@
             }
             
             .market-card {
-                padding: 15px;
+                padding: 20px 15px;
             }
             
             .numbers-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .live-clock {
+                font-size: 20px;
+            }
+            
+            .live-date {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
-  <body>
+<body>
     <!-- Header -->
     <div class="header">
-        <h1>SHREEMATKA DASHBOARD</h1>
-        <div class="header-buttons">
-            <button class="btn refresh-btn" onclick="refreshData()">🔄 REFRESH</button>
-            <button class="btn back-btn" onclick="goBack()">⬅ BACK</button>
-            <button class="btn logout-btn" onclick="logout()">🚪 LOGOUT</button>
+        <div class="header-top">
+            <h1>SHREEMATKA DASHBOARD</h1>
+            <div class="header-buttons">
+                <button class="btn refresh-btn" onclick="refreshData()">🔄 REFRESH</button>
+                <button class="btn back-btn" onclick="goBack()">⬅ BACK</button>
+                <button class="btn logout-btn" onclick="logout()">🚪 LOGOUT</button>
+            </div>
         </div>
-    </div>
-    
-    <!-- Live Clock -->
-    <div class="live-clock">
-        <h2>LIVE <span class="live-badge">● LIVE</span></h2>
-        <div class="time-date" id="liveClock"></div>
+        
+        <!-- Live Clock -->
+        <div class="live-clock-container">
+            <div class="live-badge">● LIVE</div>
+            <div class="live-clock" id="liveTime"></div>
+            <div class="live-date" id="liveDate"></div>
+        </div>
     </div>
     
     <!-- Welcome Section -->
@@ -410,13 +419,12 @@
     <!-- Market Selection Page -->
     <div class="market-container" id="marketPage">
         <div class="market-grid">
-            <!-- Market Cards -->
+            <!-- Market Cards - Removed open/closed/upcoming status -->
             <div class="market-card" onclick="showResults('SRIDEVI', '10.30 AM')">
                 <div class="market-name">
                     SRIDEVI
                     <span class="market-time">10.30 AM</span>
                 </div>
-                <div class="market-status status-open">OPEN NOW</div>
             </div>
             
             <div class="market-card" onclick="showResults('MILAN DAY', '1.30 PM')">
@@ -424,7 +432,6 @@
                     MILAN DAY
                     <span class="market-time">1.30 PM</span>
                 </div>
-                <div class="market-status status-upcoming">UPCOMING</div>
             </div>
             
             <div class="market-card" onclick="showResults('KALYAN', '2.00 PM')">
@@ -432,7 +439,6 @@
                     KALYAN
                     <span class="market-time">2.00 PM</span>
                 </div>
-                <div class="market-status status-upcoming">UPCOMING</div>
             </div>
             
             <div class="market-card" onclick="showResults('SRIDEVI NIGHT', '6.00 PM')">
@@ -440,7 +446,6 @@
                     SRIDEVI NIGHT
                     <span class="market-time">6.00 PM</span>
                 </div>
-                <div class="market-status status-closed">CLOSED</div>
             </div>
             
             <div class="market-card" onclick="showResults('MILAN NIGHT', '8.00 PM')">
@@ -448,7 +453,6 @@
                     MILAN NIGHT
                     <span class="market-time">8.00 PM</span>
                 </div>
-                <div class="market-status status-closed">CLOSED</div>
             </div>
             
             <div class="market-card" onclick="showResults('MAIN BAZAR', '8.30 PM')">
@@ -456,7 +460,6 @@
                     MAIN BAZAR
                     <span class="market-time">8.30 PM</span>
                 </div>
-                <div class="market-status status-closed">CLOSED</div>
             </div>
         </div>
     </div>
@@ -493,79 +496,43 @@
 <div class="footer">
     <p>© 2024 SHREEMATKA. All rights reserved. For authorized users only.</p>
 </div>
-        <script>
+    <script>
         // ========== LIVE CLOCK ==========
         function updateLiveClock() {
             const now = new Date();
-            const options = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
+            
+            // Format time: HH:MM:SS AM/PM
+            const timeOptions = {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
                 hour12: true
             };
-            const formattedDateTime = now.toLocaleDateString('en-US', options);
-            document.getElementById('liveClock').textContent = formattedDateTime;
+            const timeString = now.toLocaleTimeString('en-US', timeOptions);
+            
+            // Format date: Day, Month DD, YYYY
+            const dateOptions = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            const dateString = now.toLocaleDateString('en-US', dateOptions);
+            
+            // Update HTML
+            document.getElementById('liveTime').textContent = timeString;
+            document.getElementById('liveDate').textContent = dateString;
         }
         
         // Update clock every second
         updateLiveClock();
         setInterval(updateLiveClock, 1000);
         
-        // ========== MARKET STATUS ==========
-        function updateMarketStatus() {
-            const now = new Date();
-            const currentHour = now.getHours();
-            const currentMinute = now.getMinutes();
-            const currentTime = currentHour * 60 + currentMinute;
-            
-            const markets = [
-                { name: 'SRIDEVI', time: 10.5 * 60 }, // 10:30 AM = 10.5 * 60
-                { name: 'MILAN DAY', time: 13.5 * 60 }, // 1:30 PM = 13.5 * 60
-                { name: 'KALYAN', time: 14 * 60 }, // 2:00 PM = 14 * 60
-                { name: 'SRIDEVI NIGHT', time: 18 * 60 }, // 6:00 PM = 18 * 60
-                { name: 'MILAN NIGHT', time: 20 * 60 }, // 8:00 PM = 20 * 60
-                { name: 'MAIN BAZAR', time: 20.5 * 60 } // 8:30 PM = 20.5 * 60
-            ];
-            
-            // Update status for each market
-            markets.forEach(market => {
-                const timeDiff = market.time - currentTime;
-                
-                // Find market card and update status
-                const marketCards = document.querySelectorAll('.market-card');
-                marketCards.forEach(card => {
-                    if (card.querySelector('.market-name').textContent.includes(market.name)) {
-                        const statusElement = card.querySelector('.market-status');
-                        
-                        if (timeDiff > 60) { // More than 1 hour away
-                            statusElement.textContent = 'UPCOMING';
-                            statusElement.className = 'market-status status-upcoming';
-                        } else if (timeDiff > 0 && timeDiff <= 60) { // Within 1 hour
-                            statusElement.textContent = 'SOON';
-                            statusElement.className = 'market-status status-upcoming';
-                        } else if (timeDiff <= 0 && timeDiff >= -60) { // Just closed or open
-                            statusElement.textContent = 'OPEN NOW';
-                            statusElement.className = 'market-status status-open';
-                        } else { // Closed for more than 1 hour
-                            statusElement.textContent = 'CLOSED';
-                            statusElement.className = 'market-status status-closed';
-                        }
-                    }
-                });
-            });
-        }
-        
-        // Update market status every minute
-        updateMarketStatus();
-        setInterval(updateMarketStatus, 60000);
-        
-        // ========== SHOW RESULTS ==========
+        // ========== SHOW MARKET RESULTS ==========
         function showResults(marketName, marketTime) {
-            // Hide market page
+            console.log(`Opening ${marketName} at ${marketTime}`);
+            
+            // Hide market selection page
             document.getElementById('marketPage').style.display = 'none';
             
             // Show results page
@@ -575,14 +542,14 @@
             document.getElementById('marketTitle').textContent = `${marketName} - ${marketTime}`;
             
             // Show back button, hide refresh button
-            document.querySelector('.back-btn').style.display = 'block';
+            document.querySelector('.back-btn').style.display = 'inline-block';
             document.querySelector('.refresh-btn').style.display = 'none';
             
             // Generate random numbers for this market
             generateRandomNumbers();
         }
         
-        // ========== GO BACK ==========
+        // ========== GO BACK TO MARKETS ==========
         function goBack() {
             // Hide results page
             document.getElementById('resultsPage').style.display = 'none';
@@ -591,7 +558,7 @@
             document.getElementById('marketPage').style.display = 'block';
             
             // Show refresh button, hide back button
-            document.querySelector('.refresh-btn').style.display = 'block';
+            document.querySelector('.refresh-btn').style.display = 'inline-block';
             document.querySelector('.back-btn').style.display = 'none';
         }
         
@@ -623,20 +590,17 @@
             // Update clock
             updateLiveClock();
             
-            // Update market status
-            updateMarketStatus();
-            
-            // Generate random numbers for all markets
+            // Generate new random numbers
             generateRandomNumbers();
             
-            // Reset button after 2 seconds
+            // Reset button after 1 second
             setTimeout(() => {
                 refreshBtn.textContent = originalText;
                 refreshBtn.disabled = false;
                 
                 // Show success message
-                alert('Data refreshed successfully!');
-            }, 2000);
+                alert('✅ Data refreshed successfully!');
+            }, 1000);
         }
         
         // ========== LOGOUT ==========
@@ -650,79 +614,32 @@
             }
         }
         
-        // ========== CHECK AUTH ==========
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
-        
-        const auth = getAuth();
-        
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                // Not logged in, redirect to login
-                window.location.href = 'index.html';
-            }
+        // ========== CHECK AUTH & INITIALIZE ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            onAuthStateChanged(auth, (user) => {
+                if (!user) {
+                    // Not logged in, redirect to login
+                    window.location.href = 'index.html';
+                } else {
+                    console.log('User logged in:', user.email);
+                    
+                    // Initialize page
+                    updateLiveClock();
+                    generateRandomNumbers();
+                    
+                    // Make all market cards clickable
+                    document.querySelectorAll('.market-card').forEach(card => {
+                        card.style.cursor = 'pointer';
+                        card.addEventListener('click', function() {
+                            const marketName = this.querySelector('.market-name').childNodes[0].textContent.trim();
+                            const marketTime = this.querySelector('.market-time').textContent.trim();
+                            showResults(marketName, marketTime);
+                        });
+                    });
+                }
+            });
         });
-        
-        // Initial setup
-        updateMarketStatus();
-        generateRandomNumbers();
     </script>
-      // EMERGENCY FIX FOR MARKET CLICK
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log("Page loaded, adding click events...");
-        
-        // Add click events to all market cards
-        document.querySelectorAll('.market-card').forEach(card => {
-            card.onclick = function() {
-                const marketName = this.querySelector('.market-name').childNodes[0].textContent.trim();
-                const marketTime = this.querySelector('.market-time').textContent.trim();
-                
-                // Hide markets, show results
-                document.getElementById('marketPage').style.display = 'none';
-                document.getElementById('resultsPage').style.display = 'block';
-                
-                // Update title
-                document.getElementById('marketTitle').textContent = marketName + ' - ' + marketTime;
-                
-                // Show back button
-                document.querySelector('.back-btn').style.display = 'inline-block';
-                document.querySelector('.refresh-btn').style.display = 'none';
-                
-                // Generate numbers
-                document.querySelectorAll('.number-box').forEach(box => {
-                    box.textContent = Math.floor(Math.random() * 9) + 1 + '*';
-                });
-                document.querySelectorAll('.jodi-box').forEach(box => {
-                    box.textContent = Math.floor(Math.random() * 90) + 10;
-                });
-            };
-        });
-        
-        // Back button
-        document.querySelector('.back-btn').onclick = function() {
-            document.getElementById('resultsPage').style.display = 'none';
-            document.getElementById('marketPage').style.display = 'block';
-            this.style.display = 'none';
-            document.querySelector('.refresh-btn').style.display = 'inline-block';
-        };
-        
-        // Refresh button
-        document.querySelector('.refresh-btn').onclick = function() {
-            this.textContent = '🔄 UPDATING...';
-            setTimeout(() => {
-                this.textContent = '🔄 REFRESH';
-                alert('Data refreshed!');
-            }, 1000);
-        };
-        
-        // Live clock
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('liveClock').innerHTML = 
-                now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-    });
-  </script>
 </body>
 </html>
