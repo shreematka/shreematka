@@ -10,7 +10,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
         
-        // Your Firebase Config (USE YOUR EXACT CONFIG)
+        // Your Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyDViK9WuDqWQAkC5gMcLKw3TfrT5_WyHEs",
             authDomain: "shreematka-1978e.firebaseapp.com",
@@ -202,8 +202,11 @@
                 return;
             }
             
-            // Firebase requires email format
-            const email = username + '@shreematka.com';
+            // Convert username to email format
+            let email = username;
+            if (!username.includes('@')) {
+                email = username + '@shreematka.com';
+            }
             
             // Show loading state
             const loginBtn = document.querySelector('.login-btn');
@@ -252,6 +255,6 @@
                 window.location.href = 'home.html';
             }
         });
-    <script>
+    </script>
 </body>
-      </html>
+</html>
