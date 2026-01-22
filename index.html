@@ -61,7 +61,7 @@
         
         .logo {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
         .logo h1 {
@@ -117,6 +117,7 @@
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 10px;
+            margin-bottom: 20px;
         }
         
         .login-btn:hover {
@@ -132,11 +133,105 @@
             min-height: 20px;
         }
         
+        /* Contact Section */
+        .contact-section {
+            text-align: center;
+            padding: 20px;
+            margin: 25px 0;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .contact-title {
+            color: #ffd700;
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .contact-title i {
+            font-size: 20px;
+        }
+        
+        .call-button {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+        
+        .call-button:hover {
+            background: #059669;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .call-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .phone-number {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .contact-note {
+            color: #aaa;
+            font-size: 14px;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+        
+        .support-badge {
+            display: inline-block;
+            background: #ef4444;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 5px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
         .footer {
             text-align: center;
             margin-top: 25px;
             color: #666;
             font-size: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+        
+        .footer p {
+            margin-bottom: 8px;
         }
         
         /* Mobile Responsive */
@@ -148,8 +243,24 @@
             .logo h1 {
                 font-size: 28px;
             }
+            
+            .call-button {
+                padding: 12px 25px;
+                font-size: 18px;
+            }
+            
+            .phone-number {
+                font-size: 20px;
+            }
+            
+            .contact-title {
+                font-size: 16px;
+            }
         }
     </style>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="login-container">
@@ -174,8 +285,29 @@
             <div id="error" class="error-message"></div>
         </form>
         
+        <!-- Contact Section -->
+        <div class="contact-section">
+            <div class="contact-title">
+                <i class="fas fa-phone-alt"></i> CONTACT FOR NEW ID
+            </div>
+            
+            <div class="phone-number">
+                <i class="fas fa-phone"></i> +91 91132 24019
+            </div>
+            
+            <a href="tel:+919113224019" class="call-button">
+                <i class="fas fa-phone"></i> CALL NOW
+            </a>
+            
+            <div class="contact-note">
+                For new account creation and support
+                <div class="support-badge">24×7 SUPPORT</div>
+            </div>
+        </div>
+        
         <div class="footer">
             <p>© 2024 SHREEMATKA. For authorized users only.</p>
+            <p>Unauthorized access is strictly prohibited</p>
         </div>
     </div>
 
@@ -254,6 +386,11 @@
                 // User is logged in, redirect to home
                 window.location.href = 'home.html';
             }
+        });
+        
+        // Call button click tracking
+        document.querySelector('.call-button').addEventListener('click', function() {
+            console.log('Call button clicked for: +91 91132 24019');
         });
     </script>
 </body>
