@@ -102,16 +102,6 @@
         transform: scale(1.05);
     }
     
-    .admin-btn {
-        background: #8b5cf6;
-        color: white;
-    }
-    
-    .admin-btn:hover {
-        background: #7c3aed;
-        transform: scale(1.05);
-    }
-    
     .back-btn {
         background: #3b82f6;
         color: white;
@@ -372,111 +362,6 @@
             min-width: 80px;
         }
         
-        /* Admin Panel */
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .admin-content {
-            background: #1e293b;
-            padding: 30px;
-            border-radius: 20px;
-            border: 3px solid #ffd700;
-            max-width: 700px;
-            width: 95%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-        
-        .admin-header h2 {
-            color: #ffd700;
-            margin: 0;
-        }
-        
-        .close-admin {
-            background: #dc2626;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        .number-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            margin-bottom: 25px;
-        }
-        
-        .input-group {
-            margin-bottom: 15px;
-        }
-        
-        .input-group label {
-            display: block;
-            color: #ccc;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            background: #0f172a;
-            color: white;
-            border: 2px solid #ffd700;
-            font-size: 16px;
-        }
-        
-        .jodi-input {
-            border-color: #3b82f6 !important;
-        }
-        
-        .save-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(45deg, #10b981, #059669);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        
-        .format-examples {
-            background: rgba(255,215,0,0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-        
-        .format-examples h4 {
-            color: #ffd700;
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-        
         /* Footer */
         .footer {
             text-align: center;
@@ -537,10 +422,6 @@
             .welcome-section h2 {
                 font-size: 26px;
             }
-            
-            .number-inputs {
-                grid-template-columns: 1fr;
-            }
         }
         
         @media (max-width: 480px) {
@@ -572,7 +453,6 @@
         <div class="header-top">
             <h1>SHREEMATKA DASHBOARD</h1>
             <div class="header-buttons">
-                <button class="btn admin-btn" onclick="openAdminPanel()">⚙️ ADMIN</button>
                 <button class="btn refresh-btn" onclick="refreshData()">🔄 REFRESH</button>
                 <button class="btn back-btn" onclick="goBack()">⬅ BACK</button>
                 <button class="btn logout-btn" onclick="logout()">🚪 LOGOUT</button>
@@ -685,80 +565,6 @@
         </div>
     </div>
     
-    <!-- Admin Panel -->
-    <div class="admin-panel" id="adminPanel">
-        <div class="admin-content">
-            <div class="admin-header">
-                <h2>⚙️ UPDATE MARKET NUMBERS</h2>
-                <button class="close-admin" onclick="closeAdminPanel()">✖ CLOSE</button>
-            </div>
-            
-            <div class="input-group">
-                <label>Select Market:</label>
-                <select id="adminMarketSelect" style="width: 100%; padding: 12px; border-radius: 8px; background: #0f172a; color: white; border: 2px solid #ffd700;">
-                    <option value="SRIDEVI">SRIDEVI (10.30 AM)</option>
-                    <option value="MILAN DAY">MILAN DAY (1.30 PM)</option>
-                    <option value="KALYAN">KALYAN (2.00 PM)</option>
-                    <option value="SRIDEVI NIGHT">SRIDEVI NIGHT (6.00 PM)</option>
-                    <option value="MILAN NIGHT">MILAN NIGHT (8.00 PM)</option>
-                    <option value="MAIN BAZAR">MAIN BAZAR (8.30 PM)</option>
-                </select>
-            </div>
-            
-            <div class="number-inputs">
-                <div>
-                    <h3 style="color: #ffd700; margin-bottom: 15px;">OPEN NUMBERS</h3>
-                    <div class="input-group">
-                        <label>Number 1:</label>
-                        <input type="text" id="adminOpen1" placeholder="Ex: 1* or 05* or 128*" value="1*">
-                    </div>
-                    <div class="input-group">
-                        <label>Number 2:</label>
-                        <input type="text" id="adminOpen2" placeholder="Ex: 2* or 15* or 456*" value="2*">
-                    </div>
-                    <div class="input-group">
-                        <label>Number 3:</label>
-                        <input type="text" id="adminOpen3" placeholder="Ex: 3* or 25* or 789*" value="3*">
-                    </div>
-                    <div class="input-group">
-                        <label>Number 4:</label>
-                        <input type="text" id="adminOpen4" placeholder="Ex: 4* or 38* or 999*" value="4*">
-                    </div>
-                </div>
-                
-                <div>
-                    <h3 style="color: #3b82f6; margin-bottom: 15px;">JODI NUMBERS</h3>
-                    <div class="input-group">
-                        <label>Jodi 1:</label>
-                        <input type="text" id="adminJodi1" placeholder="Ex: 15 or 025 or 1234" value="15" class="jodi-input">
-                    </div>
-                    <div class="input-group">
-                        <label>Jodi 2:</label>
-                        <input type="text" id="adminJodi2" placeholder="Ex: 25 or 038 or 5678" value="25" class="jodi-input">
-                    </div>
-                    <div class="input-group">
-                        <label>Jodi 3:</label>
-                        <input type="text" id="adminJodi3" placeholder="Ex: 38 or 127 or 9999" value="38" class="jodi-input">
-                    </div>
-                    <div class="input-group">
-                        <label>Jodi 4:</label>
-                        <input type="text" id="adminJodi4" placeholder="Ex: 46 or 458 or 0000" value="46" class="jodi-input">
-                    </div>
-                </div>
-            </div>
-            
-            <div class="format-examples">
-                <h4>📝 ACCEPTED FORMATS:</h4>
-                <p>Single: <strong>1*</strong> or <strong>05</strong></p>
-                <p>Double: <strong>15*</strong> or <strong>025</strong></p>
-                <p>Triple: <strong>128*</strong> or <strong>456</strong></p>
-                <p>Any: <strong>XXXX*</strong> or <strong>XXXX</strong></p>
-            </div>
-            
-            <button class="save-btn" onclick="saveNumbers()">💾 SAVE NUMBERS</button>
-        </div>
-    </div>
-    
     <!-- Footer -->
     <div class="footer">
         <p>© 2024 SHREEMATKA. All rights reserved. For authorized users only.</p>
@@ -768,45 +574,32 @@
 
 <script>
     // ========== MARKET NUMBERS DATABASE ==========
-    let marketNumbers = {
+    const marketNumbers = {
         'SRIDEVI': {
-            open: ['1*', '6*', '**', '**'],
-            jodi: ['16', '61', '**', '**']
+            open: ['1*', '2*', '3*', '4*'],
+            jodi: ['15', '25', '38', '46']
         },
         'MILAN DAY': {
-            open: ['5*', '6*', '0*', '1*'],
-            jodi: ['56', '65', '06', '10']
+            open: ['5*', '6*', '7*', '8*'],
+            jodi: ['12', '23', '34', '45']
         },
         'KALYAN': {
-            open: ['5*', '0*', '6*', '1*'],
-            jodi: ['52', '07', '62', '17']
+            open: ['2*', '4*', '6*', '8*'],
+            jodi: ['11', '22', '33', '44']
         },
         'SRIDEVI NIGHT': {
-            open: ['**', '**', '**', '**'],
-            jodi: ['**', '**', '**', '**']
+            open: ['3*', '6*', '9*', '1*'],
+            jodi: ['16', '27', '38', '49']
         },
         'MILAN NIGHT': {
-            open: ['**', '**', '**', '**'],
-            jodi: ['**', '**', '**', '**']
+            open: ['4*', '8*', '2*', '6*'],
+            jodi: ['10', '20', '30', '40']
         },
         'MAIN BAZAR': {
-            open: ['**', '**', '**', '**'],
-            jodi: ['**', '**', '**', '**']
+            open: ['9*', '7*', '5*', '3*'],
+            jodi: ['14', '25', '36', '47']
         }
     };
-    
-    // Load saved numbers from localStorage
-    function loadSavedNumbers() {
-        const saved = localStorage.getItem('shreematkaNumbers');
-        if (saved) {
-            marketNumbers = JSON.parse(saved);
-        }
-    }
-    
-    // Save numbers to localStorage
-    function saveToStorage() {
-        localStorage.setItem('shreematkaNumbers', JSON.stringify(marketNumbers));
-    }
     
     // ========== LIVE CLOCK ==========
     function updateLiveClock() {
@@ -853,7 +646,6 @@
         // Show back button, hide refresh button
         document.querySelector('.back-btn').style.display = 'inline-block';
         document.querySelector('.refresh-btn').style.display = 'none';
-        document.querySelector('.admin-btn').style.display = 'none';
         
         // Show numbers for this market
         showMarketNumbers(marketName);
@@ -886,71 +678,8 @@
         
         // Show buttons, hide back button
         document.querySelector('.refresh-btn').style.display = 'inline-block';
-        document.querySelector('.admin-btn').style.display = 'inline-block';
         document.querySelector('.back-btn').style.display = 'none';
     }
-        // ========== ADMIN PANEL FUNCTIONS ==========
-        function openAdminPanel() {
-            document.getElementById('adminPanel').style.display = 'flex';
-            
-            // Load current market data
-            const marketSelect = document.getElementById('adminMarketSelect');
-            const market = marketSelect.value;
-            const numbers = marketNumbers[market] || marketNumbers['SRIDEVI'];
-            
-            // Fill input fields
-            document.getElementById('adminOpen1').value = numbers.open[0] || '';
-            document.getElementById('adminOpen2').value = numbers.open[1] || '';
-            document.getElementById('adminOpen3').value = numbers.open[2] || '';
-            document.getElementById('adminOpen4').value = numbers.open[3] || '';
-            
-            document.getElementById('adminJodi1').value = numbers.jodi[0] || '';
-            document.getElementById('adminJodi2').value = numbers.jodi[1] || '';
-            document.getElementById('adminJodi3').value = numbers.jodi[2] || '';
-            document.getElementById('adminJodi4').value = numbers.jodi[3] || '';
-        }
-        
-        function closeAdminPanel() {
-            document.getElementById('adminPanel').style.display = 'none';
-        }
-        
-        // ========== SAVE NUMBERS ==========
-        function saveNumbers() {
-            const market = document.getElementById('adminMarketSelect').value;
-            
-            // Get values from input fields
-            const open1 = document.getElementById('adminOpen1').value.trim() || '0*';
-            const open2 = document.getElementById('adminOpen2').value.trim() || '0*';
-            const open3 = document.getElementById('adminOpen3').value.trim() || '0*';
-            const open4 = document.getElementById('adminOpen4').value.trim() || '0*';
-            
-            const jodi1 = document.getElementById('adminJodi1').value.trim() || '00';
-            const jodi2 = document.getElementById('adminJodi2').value.trim() || '00';
-            const jodi3 = document.getElementById('adminJodi3').value.trim() || '00';
-            const jodi4 = document.getElementById('adminJodi4').value.trim() || '00';
-            
-            // Save to database
-            marketNumbers[market] = {
-                open: [open1, open2, open3, open4],
-                jodi: [jodi1, jodi2, jodi3, jodi4]
-            };
-            
-            // Save to localStorage
-            saveToStorage();
-            
-            // Show success message
-            alert(`✅ ${market} numbers updated successfully!\n\nOpen: ${open1}, ${open2}, ${open3}, ${open4}\nJodi: ${jodi1}, ${jodi2}, ${jodi3}, ${jodi4}`);
-            
-            // Close admin panel
-            closeAdminPanel();
-            
-            // If this market is currently shown, update it
-            const currentMarket = document.getElementById('marketTitle').textContent.split(' - ')[0];
-            if (currentMarket === market) {
-                showMarketNumbers(market);
-            }
-        }
-        
         // ========== REFRESH DATA ==========
         function refreshData() {
             // Show loading animation
@@ -985,9 +714,6 @@
         
         // ========== CHECK AUTH & INITIALIZE ==========
         document.addEventListener('DOMContentLoaded', function() {
-            // Load saved numbers
-            loadSavedNumbers();
-            
             // Check if user is logged in
             onAuthStateChanged(auth, (user) => {
                 if (!user) {
@@ -1012,21 +738,13 @@
             });
         });
         
-        // Auto-save when market select changes
-        document.getElementById('adminMarketSelect').addEventListener('change', function() {
-            const market = this.value;
-            const numbers = marketNumbers[market] || marketNumbers['SRIDEVI'];
-            
-            // Update input fields with new market data
-            document.getElementById('adminOpen1').value = numbers.open[0] || '';
-            document.getElementById('adminOpen2').value = numbers.open[1] || '';
-            document.getElementById('adminOpen3').value = numbers.open[2] || '';
-            document.getElementById('adminOpen4').value = numbers.open[3] || '';
-            
-            document.getElementById('adminJodi1').value = numbers.jodi[0] || '';
-            document.getElementById('adminJodi2').value = numbers.jodi[1] || '';
-            document.getElementById('adminJodi3').value = numbers.jodi[2] || '';
-            document.getElementById('adminJodi4').value = numbers.jodi[3] || '';
+        // Add click sound effect for market cards
+        document.querySelectorAll('.market-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Optional: Add click sound
+                const clickSound = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==');
+                clickSound.play().catch(e => console.log("Sound play failed"));
+            });
         });
     </script>
 </body>
